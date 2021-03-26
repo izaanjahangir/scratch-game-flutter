@@ -52,7 +52,7 @@ class _HomeState extends State<Home> {
       new model.Fruit("pineapple", "assets/images/pineapple.png"),
     ];
 
-    // newFruits.shuffle();
+    newFruits.shuffle();
 
     setState(() {
       difficulty = "easy";
@@ -73,7 +73,7 @@ class _HomeState extends State<Home> {
       new model.Fruit("strawberry", "assets/images/strawberry.png"),
     ];
 
-    // newFruits.shuffle();
+    newFruits.shuffle();
 
     setState(() {
       difficulty = "normal";
@@ -94,7 +94,7 @@ class _HomeState extends State<Home> {
       new model.Fruit("strawberry", "assets/images/strawberry.png"),
     ];
 
-    // newFruits.shuffle();
+    newFruits.shuffle();
 
     setState(() {
       difficulty = "hard";
