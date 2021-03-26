@@ -19,6 +19,7 @@ class _FruitState extends State<Fruit> {
   Widget build(BuildContext context) {
     return Container(
       child: Scratcher(
+        accuracy: ScratchAccuracy.medium,
         enabled: !isScratched,
         onChange: (value) {
           setState(() {
