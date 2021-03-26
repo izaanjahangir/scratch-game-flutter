@@ -1,17 +1,55 @@
 import 'package:flutter/material.dart';
 import "package:scratcher_game/components/fruit/fruit.dart";
 import "package:scratcher_game/screens/home/header.dart";
+import "package:flutter/cupertino.dart";
 
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
 
+    showDifficultySelectModal() {
+      showCupertinoModalPopup(
+        context: context,
+        builder: (BuildContext context) => CupertinoActionSheet(
+          title: const Text('Select Difficulty'),
+          actions: [
+            CupertinoActionSheetAction(
+              child: const Text('Easy'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            CupertinoActionSheetAction(
+              child: const Text('Normal'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            CupertinoActionSheetAction(
+              child: const Text('Hard'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            child: const Text('Cancel'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            Header(),
+            Header(
+              onChipPress: showDifficultySelectModal,
+            ),
             Container(
               padding: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
               child: Column(

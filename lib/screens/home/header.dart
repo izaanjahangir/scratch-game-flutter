@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Header extends StatelessWidget {
+  final Function onChipPress;
+
+  Header({@required this.onChipPress});
+
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -22,7 +26,10 @@ class Header extends StatelessWidget {
               ],
             ),
           ),
-          ChipButton(label: "Easy")
+          ChipButton(
+            label: "Easy",
+            onPress: onChipPress,
+          )
         ],
       ),
     );
@@ -31,8 +38,9 @@ class Header extends StatelessWidget {
 
 class ChipButton extends StatelessWidget {
   final String label;
+  final Function onPress;
 
-  ChipButton({this.label});
+  ChipButton({@required this.label, @required this.onPress});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +53,7 @@ class ChipButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         child: InkWell(
           borderRadius: BorderRadius.circular(15),
-          onTap: () {},
+          onTap: onPress,
           child: Container(
             padding: EdgeInsets.symmetric(
                 horizontal: height * 0.02, vertical: height * 0.005),
