@@ -10,8 +10,20 @@ class Header extends StatelessWidget {
       height: height * 0.075,
       color: Color.fromRGBO(0, 0, 0, 0.8),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [ChipButton(label: "Easy")],
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          RichText(
+            text: TextSpan(
+              style: TextStyle(fontSize: 16),
+              text: 'Tries Left: ',
+              children: <TextSpan>[
+                TextSpan(
+                    text: '2', style: TextStyle(fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+          ChipButton(label: "Easy")
+        ],
       ),
     );
   }
