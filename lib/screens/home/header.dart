@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 class Header extends StatelessWidget {
   final Function onChipPress;
+  final int leftTries;
+  final String difficulty;
 
-  Header({@required this.onChipPress});
+  Header(
+      {@required this.onChipPress,
+      @required this.leftTries,
+      @required this.difficulty});
 
   @override
   Widget build(BuildContext context) {
@@ -22,12 +27,13 @@ class Header extends StatelessWidget {
               text: 'Tries Left: ',
               children: <TextSpan>[
                 TextSpan(
-                    text: '2', style: TextStyle(fontWeight: FontWeight.bold)),
+                    text: leftTries.toString(),
+                    style: TextStyle(fontWeight: FontWeight.bold)),
               ],
             ),
           ),
           ChipButton(
-            label: "Easy",
+            label: difficulty,
             onPress: onChipPress,
           )
         ],
@@ -59,10 +65,11 @@ class ChipButton extends StatelessWidget {
                 horizontal: height * 0.02, vertical: height * 0.005),
             child: Row(
               children: [
-                Text(
-                  label,
-                  style: TextStyle(fontSize: 14),
-                ),
+                if (label != null)
+                  Text(
+                    label,
+                    style: TextStyle(fontSize: 14),
+                  ),
                 Icon(
                   Icons.arrow_drop_down,
                   size: height * 0.03,

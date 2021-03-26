@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:scratcher/scratcher.dart';
+import "package:scratcher_game/models/fruit.dart" as model;
 
 class Fruit extends StatefulWidget {
-  final double width;
+  final model.Fruit item;
+  final double brushSize;
+  final double cardWidth;
+  final Function onScratched;
 
-  Fruit({@required this.width});
+  Fruit(
+      {@required this.item,
+      @required this.cardWidth,
+      @required this.brushSize,
+      @required this.onScratched});
 
   @override
   _FruitState createState() => _FruitState();
@@ -26,8 +34,8 @@ class _FruitState extends State<Fruit> {
             scratchedPercentage = value;
           });
         },
-        brushSize: widget.width * 0.05,
-        threshold: 70,
+        brushSize: widget.brushSize,
+        threshold: 60,
         image: Image.asset("assets/images/scratch-here.jpeg"),
         onThreshold: () {
           setState(() {
@@ -39,15 +47,17 @@ class _FruitState extends State<Fruit> {
               opacity = 1;
             });
           });
+
+          widget.onScratched(widget.item);
         },
         child: Container(
-            width: widget.width * 0.45,
-            height: widget.width * 0.45,
+            width: widget.cardWidth,
+            height: widget.cardWidth,
             child: isScratched
                 ? AnimatedOpacity(
                     opacity: opacity,
                     duration: Duration(seconds: 1),
-                    child: Image.asset("assets/images/apple.png"))
+                    child: Image.asset(widget.item.image))
                 : Center(
                     child: Container(
                       child: Column(
