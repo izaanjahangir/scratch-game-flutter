@@ -3,6 +3,7 @@ import "package:scratcher_game/components/fruit/fruit.dart";
 import "package:scratcher_game/screens/home/header.dart";
 import "package:flutter/cupertino.dart";
 import "package:scratcher_game/models/fruit.dart" as model;
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -12,6 +13,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   String difficulty = "easy";
   int leftTries = 0;
+  bool isPlaying = false;
+  bool showGrid = true;
   List<model.Fruit> fruits = [];
 
   @override
@@ -25,7 +28,7 @@ class _HomeState extends State<Home> {
     final localDiff = difficulty;
 
     setState(() {
-      difficulty = null;
+      showGrid = false;
     });
 
     new Future.delayed(const Duration(milliseconds: 100), () {
@@ -49,12 +52,14 @@ class _HomeState extends State<Home> {
       new model.Fruit("pineapple", "assets/images/pineapple.png"),
     ];
 
-    newFruits.shuffle();
+    // newFruits.shuffle();
 
     setState(() {
       difficulty = "easy";
       fruits = newFruits;
       leftTries = 2;
+      isPlaying = true;
+      showGrid = true;
     });
   }
 
@@ -68,12 +73,14 @@ class _HomeState extends State<Home> {
       new model.Fruit("strawberry", "assets/images/strawberry.png"),
     ];
 
-    newFruits.shuffle();
+    // newFruits.shuffle();
 
     setState(() {
       difficulty = "normal";
       fruits = newFruits;
       leftTries = 3;
+      isPlaying = true;
+      showGrid = true;
     });
   }
 
@@ -93,6 +100,8 @@ class _HomeState extends State<Home> {
       difficulty = "hard";
       fruits = newFruits;
       leftTries = 2;
+      isPlaying = true;
+      showGrid = true;
     });
   }
 
@@ -147,9 +156,81 @@ class _HomeState extends State<Home> {
       );
     }
 
+    showSuccess() {
+      Alert(
+        style: AlertStyle(
+          animationType: AnimationType.grow,
+          isCloseButton: true,
+          isOverlayTapDismiss: true,
+          animationDuration: Duration(milliseconds: 500),
+        ),
+        context: context,
+        type: AlertType.success,
+        title: "You won!",
+        desc: "Your doctor will stay away from you",
+        buttons: [
+          DialogButton(
+            child: Text(
+              "Play again",
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+            onPressed: () {
+              loadGame();
+              Navigator.pop(context);
+            },
+            width: 120,
+          )
+        ],
+      ).show();
+
+      setState(() {
+        isPlaying = false;
+      });
+    }
+
+    showError() {
+      Alert(
+        style: AlertStyle(
+          animationType: AnimationType.grow,
+          isCloseButton: true,
+          isOverlayTapDismiss: true,
+          animationDuration: Duration(milliseconds: 500),
+        ),
+        context: context,
+        type: AlertType.error,
+        title: "You lose!",
+        desc: "Your doctor is coming",
+        buttons: [
+          DialogButton(
+            child: Text(
+              "Play again",
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+            onPressed: () {
+              loadGame();
+              Navigator.pop(context);
+            },
+            width: 120,
+          )
+        ],
+      ).show();
+
+      setState(() {
+        isPlaying = false;
+      });
+    }
+
     handleScratched(scatchedItem) {
       if (scatchedItem.id == "apple") {
-        print("You won");
+        showSuccess();
+      } else {
+        setState(() {
+          leftTries = leftTries - 1;
+        });
+
+        if (leftTries == 0) {
+          showError();
+        }
       }
     }
 
@@ -192,29 +273,44 @@ class _HomeState extends State<Home> {
                               color: Colors.red,
                               fontWeight: FontWeight.bold),
                         ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Opacity(
+                          opacity: isPlaying ? 0 : 1,
+                          child: Text(
+                            "Game is finished. Please restart",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.red,
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 10,
+                  AbsorbPointer(
+                    absorbing: !isPlaying,
+                    child: showGrid
+                        ? GridView.count(
+                            physics: new NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            crossAxisCount: difficulty != "easy" ? 3 : 2,
+                            children: fruits
+                                .map((item) => Fruit(
+                                    onScratched: handleScratched,
+                                    brushSize: difficulty != "easy"
+                                        ? width * 0.04
+                                        : width * 0.05,
+                                    cardWidth: difficulty != "easy"
+                                        ? width * 0.3
+                                        : width * 0.4,
+                                    item: item))
+                                .toList(),
+                          )
+                        : Container(),
                   ),
-                  if (difficulty != null)
-                    GridView.count(
-                      physics: new NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      crossAxisCount: difficulty != "easy" ? 3 : 2,
-                      children: fruits
-                          .map((item) => Fruit(
-                              onScratched: handleScratched,
-                              brushSize: difficulty != "easy"
-                                  ? width * 0.025
-                                  : width * 0.05,
-                              cardWidth: difficulty != "easy"
-                                  ? width * 0.3
-                                  : width * 0.4,
-                              item: item))
-                          .toList(),
-                    ),
                 ],
               ),
             ),
