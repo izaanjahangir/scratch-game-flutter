@@ -4,6 +4,8 @@ import "package:scratcher_game/components/fruit/fruit.dart";
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Home"),
@@ -53,7 +55,9 @@ class Home extends StatelessWidget {
               shrinkWrap: true,
               crossAxisCount: 2,
               children: List.generate(4, (index) {
-                return Fruit();
+                return Fruit(
+                  width: width,
+                );
               }),
             ),
           ],
